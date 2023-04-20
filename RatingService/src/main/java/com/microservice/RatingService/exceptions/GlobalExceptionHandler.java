@@ -1,0 +1,18 @@
+package com.microservice.RatingService.exceptions;
+
+import com.microservice.RatingService.services.payload.ApiResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleResourceNotFoundException(ResourceNotFoundException exception){
+        String message = exception.getMessage();
+        ApiResponse response = ApiResponse.builder().message(message).status(HttpStatus.NOT_FOUND).success(false).build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+}
