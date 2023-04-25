@@ -1,6 +1,7 @@
 package com.microservice.RatingService.entities;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "micro_ratings")
@@ -10,9 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Builder
 public class Rating {
-    private int ratingId;
+
+    @Id
+    private String ratingId;
     private int rating;
     private String feedback;
     private String userId;
     private String hotelId;
+
 }

@@ -1,4 +1,4 @@
-package com.microservice.RatingService;
+package com.microservice.RatingService.controllers;
 
 import com.microservice.RatingService.entities.Rating;
 import com.microservice.RatingService.services.RatingService;
@@ -28,20 +28,32 @@ public class RatingController {
         return ResponseEntity.ok(ratings);
     }
 
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<Rating>> getRatingsByUserId(@PathVariable String userId){
+        List<Rating> ratings = ratingService.getRatingsByUserId(userId);
+        return ResponseEntity.ok(ratings);
+    }
+
+    @GetMapping("/hotels/{hotelId}")
+    public ResponseEntity<List<Rating>> getRatingsByHotelId(@PathVariable String hotelId){
+        List<Rating> ratings = ratingService.getRatingsByHotelId(hotelId);
+        return ResponseEntity.ok(ratings);
+    }
+
     @GetMapping("/{ratingId}")
-    public ResponseEntity<Rating> getRating(@PathVariable int ratingId){
+    public ResponseEntity<Rating> getRating(@PathVariable String ratingId){
         Rating rating = ratingService.getRating(ratingId);
         return ResponseEntity.ok(rating);
     }
 
     @PutMapping("/{ratingId}")
-    public ResponseEntity<Rating> updateRating(@PathVariable int ratingId, @RequestBody Rating rating){
+    public ResponseEntity<Rating> updateRating(@PathVariable String ratingId, @RequestBody Rating rating){
         Rating rating1 = ratingService.updateRating(ratingId, rating);
         return ResponseEntity.ok(rating1);
     }
 
     @DeleteMapping("/{ratingId}")
-    public ResponseEntity<String> deleteRating(@PathVariable int ratingId){
+    public ResponseEntity<String> deleteRating(@PathVariable String ratingId){
         if(ratingService.deleteRating(ratingId)){
             return ResponseEntity.ok("Success");
         }else{

@@ -28,6 +28,7 @@ public class UserController {
     // Single get by id
     @GetMapping("/{userId}")
     public ResponseEntity<User> getSingleUser(@PathVariable String userId){
+        // Fetch users from databse
         User user = userService.getUser(userId);
         return ResponseEntity.ok(user);
     }

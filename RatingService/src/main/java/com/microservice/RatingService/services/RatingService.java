@@ -9,9 +9,13 @@ public interface RatingService {
 
     public List<Rating> getRatings();
 
-    public Rating getRating(int ratingId);
+    public List<Rating> getRatingsByUserId(String userId);
 
-    public Rating updateRating(int ratingId, Rating rating);
+    public List<Rating> getRatingsByHotelId(String userId);
 
-    public boolean deleteRating(int ratingId);
+    public Rating getRating(String ratingId);
+
+    public Rating updateRating(String ratingId, Rating rating);
+
+    public boolean deleteRating(String ratingId);
 }

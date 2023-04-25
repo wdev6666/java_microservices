@@ -19,7 +19,7 @@ public class HotelController {
     @PostMapping
     public ResponseEntity<Hotel> addHotel(@RequestBody Hotel hotel){
         Hotel hotel1 = hotelService.saveHotel(hotel);
-        return ResponseEntity.ok(hotel1);
+        return ResponseEntity.status(HttpStatus.CREATED).body(hotel1);
     }
 
     @GetMapping("/{hotelId}")

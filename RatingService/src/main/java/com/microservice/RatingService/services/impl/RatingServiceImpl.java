@@ -26,19 +26,29 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Rating getRating(int ratingId) {
+    public List<Rating> getRatingsByUserId(String userId) {
+        return ratingRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<Rating> getRatingsByHotelId(String hotelId) {
+        return ratingRepository.findByHotelId(hotelId);
+    }
+
+    @Override
+    public Rating getRating(String ratingId) {
         return ratingRepository.findById(ratingId).orElseThrow(() -> new ResourceNotFoundException("Rating not found with ratingId: "+ ratingId));
     }
 
     @Override
-    public Rating updateRating(int ratingId, Rating rating) {
+    public Rating updateRating(String ratingId, Rating rating) {
         Rating rating1 = ratingRepository.findById(ratingId).orElseThrow(() -> new ResourceNotFoundException("Rating not found with ratingId: "+ ratingId));
         rating1.setRating(rating.getRating() != 0 ? rating.getRating() : rating1.getRating());
         return ratingRepository.save(rating);
     }
 
     @Override
-    public boolean deleteRating(int ratingId) {
+    public boolean deleteRating(String ratingId) {
         Rating rating = ratingRepository.findById(ratingId).orElseThrow(() -> new ResourceNotFoundException("Rating not found with ratingId: "+ ratingId));
         ratingRepository.delete(rating);
         return true;
