@@ -4,6 +4,8 @@ import com.microservice.UserService.entities.Hotel;
 import com.microservice.UserService.entities.Rating;
 import com.microservice.UserService.entities.User;
 import com.microservice.UserService.exceptions.ResourceNotFoundException;
+import com.microservice.UserService.externals.HotelService;
+import com.microservice.UserService.externals.RatingService;
 import com.microservice.UserService.repositories.UserRepository;
 import com.microservice.UserService.services.UserService;
 import org.slf4j.Logger;
@@ -27,6 +29,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private HotelService hotelService;
+
+    @Autowired
+    private RatingService ratingService;
+
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
@@ -36,21 +44,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    public User setRatings(User user){
-        user.setRatings(restTemplate.getForObject("http://localhost:8083/ratings/users/"+user.getUserId(), ArrayList.class));
-        return user;
-    }
-
-    public Rating setHotel(Rating rating){
-        return null;
-    }
     @Override
     public List<User> getAllUser() {
         List<User> allUsers = userRepository.findAll();
         List<User> allUsersWithRating = allUsers.stream().map(user -> {
-            Rating[] ratings = restTemplate.getForObject("http://localhost:8083/ratings/users/" + user.getUserId(), Rating[].class);
-            List<Rating> ratingsWithHotel = Arrays.asList(ratings).stream().map(rating -> {
-                Hotel hotel = restTemplate.getForObject("http://localhost:8082/hotels/" + rating.getHotelId(), Hotel.class);
+            //Rating[] ratings = restTemplate.getForObject("http://RATING-SERVICE/ratings/users/" + user.getUserId(), Rating[].class);
+            List<Rating> ratings = ratingService.getRatingsByUser(user.getUserId());
+            List<Rating> ratingsWithHotel = ratings.stream().map(rating -> {
+                //Hotel hotel = restTemplate.getForObject("http://HOTEl-SERVICE/hotels/" + rating.getHotelId(), Hotel.class); // RestTemplate Approach
+                Hotel hotel = hotelService.getHotel(rating.getHotelId()); // FeignClient Approach
                 rating.setHotel(hotel);
                 return rating;
             }).collect(Collectors.toList());
@@ -67,9 +69,11 @@ public class UserServiceImpl implements UserService {
         // Fetch ratings of userId from RATING-SERVICE
         // http://localhost:8083/ratings/users/1837a1b4-6830-47ae-9369-1b32c33e3c22
 
-        Rating[] ratings = restTemplate.getForObject("http://localhost:8083/ratings/users/" + userId, Rating[].class);
-        List<Rating> ratingsWithHotel = Arrays.asList(ratings).stream().map(rating -> {
-            Hotel hotel = restTemplate.getForObject("http://localhost:8082/hotels/" + rating.getHotelId(), Hotel.class);
+        //Rating[] ratings = restTemplate.getForObject("http://RATING-SERVICE/ratings/users/" + userId, Rating[].class);
+        List<Rating> ratings = ratingService.getRatingsByUser(userId);
+        List<Rating> ratingsWithHotel = ratings.stream().map(rating -> {
+            //Hotel hotel = restTemplate.getForObject("http://HOTEL-SERVICE/hotels/" + rating.getHotelId(), Hotel.class); // RestTemplate Approach
+            Hotel hotel = hotelService.getHotel(rating.getHotelId()); // FeignClient Approach
             rating.setHotel(hotel);
             return rating;
         }).collect(Collectors.toList());
