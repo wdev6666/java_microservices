@@ -6,8 +6,6 @@ spring:
     name: USER-SERVICE
   config:
     import: optional:configserver:http://localhost:8084
-  profiles:
-    active: dev
   datasource:
     url: jdbc:mysql://localhost:3306/microservices
     username: root

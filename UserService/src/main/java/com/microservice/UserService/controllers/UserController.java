@@ -17,6 +17,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserService userService2;
+
     // Create
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user){
@@ -28,7 +31,7 @@ public class UserController {
     // Single get by id
     @GetMapping("/{userId}")
     public ResponseEntity<User> getSingleUser(@PathVariable String userId){
-        // Fetch users from databse
+        // Fetch users from database
         User user = userService.getUser(userId);
         return ResponseEntity.ok(user);
     }
